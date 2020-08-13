@@ -8,8 +8,9 @@ change_volume() {
 #change_volume $1
 
 get_volume() {
-    text=$(awk -F"[]%[]" '/Mono/ {print $2}' <(amixer -c 0 sget 'Master'))
-    echo "$text"
+    mixerOut=$(amixer -c 0 sget 'Master')
+    text=$(echo "$mixerOut" | awk -F"[]%[]" '/Mono/ {print $2}' )
+    echo $text | grep -E '[0-9]+'
 }
 
 output_volume() {
@@ -18,11 +19,15 @@ output_volume() {
 
 #output_volume
 
-set_down_volume() {
+set_down_volume(){
+    if [ $(get_volume) -gt 80 ]; then
+        change_volume 50
+    fi
+}
+
+monitor_volume() {
     while true; do
-        if [ $(get_volume) -gt 80 ]; then
-            change_volume 50
-        fi
+        set_down_volume
         sleep 1
     done
 }
@@ -34,4 +39,6 @@ rangebox_volume() {
     change_volume $New_Volume
 }
 
-rangebox_volume
+#rangebox_volume
+
+$1 $2
