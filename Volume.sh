@@ -20,8 +20,11 @@ output_volume() {
 #output_volume
 
 set_down_volume(){
-    if [ $(get_volume) -gt 80 ]; then
-        change_volume 50
+    vol=$(get_volume)
+    echo $vol
+    if [ "$vol" -gt 80 ]; then
+        #espeak -v "de"  "Das ist viel zu laut Joshua. Mach leise! Jetzt!"
+        change_volume 70
     fi
 }
 
